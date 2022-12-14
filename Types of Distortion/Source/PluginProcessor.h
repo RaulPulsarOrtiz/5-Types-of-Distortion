@@ -55,15 +55,13 @@ public:
 
     //==============================================================================
     void setClippingGain(float newClippingGain);
-    void setSoftCurve(float newSoftCurve);
-    void setAsymVariable(float newAsymVariableValue);
+    void setSoftCurve(double newSoftCurve);
+    void setAsymVariable(double newAsymVariableValue);
     //==============================================================================
     float hardClipping(float input);
     float softClipping(float input, int a);
     float quarterCircle(float input);
     float asymmetrical(float input, float c);
-
- //   float hardClipProcessor(juce::AudioBuffer<float>& buffer);
     
    // enum typeOfDistortion
    // {

@@ -34,16 +34,16 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
 
     softCurve.setSliderStyle(Slider::Rotary);
     //setTextBoxStyle()
-    softCurve.setRange(0.001, 1);
-    softCurve.setValue(0.001);
+    softCurve.setRange(10.0, 10000.0);
+    softCurve.setValue(10.0);
     softCurve.addListener(this);
     addAndMakeVisible(softCurve);
 
     
     asymVariable.setSliderStyle(Slider::Rotary);
     //setTextBoxStyle()
-    asymVariable.setRange(0, 1);
-    asymVariable.setValue(1);
+    asymVariable.setRange(0.0, 1.0);
+    asymVariable.setValue(1.0);
     asymVariable.addListener(this);
     addAndMakeVisible(asymVariable);
 
@@ -93,27 +93,27 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
 {
     if (comboBoxThatHasChanged == &menu)
     {
-        if (menu.getItemId(0))
+        if (menu.getSelectedId() == 1)
         {
             audioProcessor.typeOfDistortion = 0;
         }
 
-        else if (menu.getItemId(1))
+        else if (menu.getSelectedId() == 2)
         {
             audioProcessor.typeOfDistortion = 1;
         }
 
-        else if (menu.getItemId(2))
+        else if (menu.getSelectedId() == 3)
         {
             audioProcessor.typeOfDistortion = 2;
         }
 
-        else if (menu.getItemId(3))
+        else if (menu.getSelectedId() == 4)
         {
             audioProcessor.typeOfDistortion = 3;
         }
        
-        else if (menu.getItemId(4))
+        else if (menu.getSelectedId() == 5)
         {
             audioProcessor.typeOfDistortion = 4;
         }

@@ -131,6 +131,7 @@ bool TypesofDistortionAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 float TypesofDistortionAudioProcessor::hardClipping(float input)
 {
+    float output = 0;
     if (input > 1)
     {
         return 1.f;
@@ -155,6 +156,17 @@ float TypesofDistortionAudioProcessor::softClipping(float input, int a)
         output = (a / (a - 1)) * (-1 + pow(a, input));
     }
     return output;
+
+   // if (input > 0)
+   // {
+   //     output = 1 - pow(a, -input);
+   // }
+   // else
+   // {
+   //     output = -1 + pow(a, input);
+   // }
+   // output = output * a / (a - 1);
+   // return output;
 }
 
 float TypesofDistortionAudioProcessor::quarterCircle(float input)
@@ -186,26 +198,6 @@ float TypesofDistortionAudioProcessor::asymmetrical(float input, float c)
     }
     return output;
 }
-
-//float TypesofDistortionAudioProcessor::hardClipProcessor(juce::AudioBuffer<float>& buffer)
-//{
-//    float fMix = 0;
-//    auto totalNumInputChannels = getTotalNumInputChannels();
-//    
-//    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-//    {
-//        auto* channelData = buffer.getWritePointer(channel);
-//
-//        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
-//        {
-//            channelData[sample] = buffer.getSample(channel, sample);
-//            fMix = channelData[sample] * clippingGain;
-//            channelData[sample] = hardClipping(fMix);
-//            
-//            //channelData[sample] = hardClipping(channelData[sample] * clippingGain;);
-//        }
-//    }
-//}
 
 void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
@@ -268,11 +260,12 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
                 channelData[sample] = buffer.getSample(channel, sample);
-                fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
+                fMix = channelData[sample] * (clippingGain * 0.17); //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
                 float hardClipped = hardClipping(fMix);
            
                 channelData[sample] = softClipping(hardClipped, softCurveValue);
+               // channelData[sample] = quarterCircle(hardClipped);
             }
         }
 
@@ -338,12 +331,12 @@ void TypesofDistortionAudioProcessor::setClippingGain(float newClippingGain)
     clippingGain = newClippingGain;
 }
 
-void TypesofDistortionAudioProcessor::setSoftCurve(float newSoftCurve)
+void TypesofDistortionAudioProcessor::setSoftCurve(double newSoftCurve)
 {
     softCurveValue = newSoftCurve;
 }
 
-void TypesofDistortionAudioProcessor::setAsymVariable(float newAsymVariableValue)
+void TypesofDistortionAudioProcessor::setAsymVariable(double newAsymVariableValue)
 {
     asymVariableValue = newAsymVariableValue;
 }
