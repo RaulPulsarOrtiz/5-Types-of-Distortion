@@ -10,12 +10,20 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor (TypesofDistortionAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(TypesofDistortionAudioProcessor& p)
+    : AudioProcessorEditor(&p), audioProcessor(p), menu("menu")
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (600, 400);
+    setSize(600, 400);
+
+    menu.addItem("Off", 1);
+    menu.addItem("Hard Clipping", 2);
+    menu.addItem("Soft Clipping", 3);
+    menu.addItem("Quarter Circle", 4);
+    menu.addItem("Asymmetrical ", 5);
+    menu.addListener(this);
+    addAndMakeVisible(menu);
 
     clippingGainSldr.setSliderStyle(Slider::Rotary);
     //setTextBoxStyle()
@@ -23,6 +31,22 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor (Ty
     clippingGainSldr.setValue(1);
     clippingGainSldr.addListener(this);
     addAndMakeVisible(clippingGainSldr);
+
+    softCurve.setSliderStyle(Slider::Rotary);
+    //setTextBoxStyle()
+    softCurve.setRange(0.001, 1);
+    softCurve.setValue(0.001);
+    softCurve.addListener(this);
+    addAndMakeVisible(softCurve);
+
+    
+    asymVariable.setSliderStyle(Slider::Rotary);
+    //setTextBoxStyle()
+    asymVariable.setRange(0, 1);
+    asymVariable.setValue(1);
+    asymVariable.addListener(this);
+    addAndMakeVisible(asymVariable);
+
 }
 
 TypesofDistortionAudioProcessorEditor::~TypesofDistortionAudioProcessorEditor()
@@ -30,10 +54,10 @@ TypesofDistortionAudioProcessorEditor::~TypesofDistortionAudioProcessorEditor()
 }
 
 //==============================================================================
-void TypesofDistortionAudioProcessorEditor::paint (juce::Graphics& g)
+void TypesofDistortionAudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
 }
 
@@ -41,8 +65,10 @@ void TypesofDistortionAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    clippingGainSldr.setBounds(10, 10, getWidth()/3, getHeight()/6);
-   // clippingGainSldr.setSize(100, 100);
+    clippingGainSldr.setBounds(10, 10, getWidth() / 3, getHeight() / 6);
+    softCurve.setBounds(150, 10, getWidth() / 3, getHeight() / 6);
+    asymVariable.setBounds(290, 10, getWidth() / 3, getHeight() / 6);
+    menu.setBounds(10, 70, getWidth() / 3, getHeight() / 10);
 }
 
 void TypesofDistortionAudioProcessorEditor::sliderValueChanged(Slider* slider)
@@ -50,5 +76,46 @@ void TypesofDistortionAudioProcessorEditor::sliderValueChanged(Slider* slider)
     if (slider == &clippingGainSldr)
     {
         audioProcessor.setClippingGain(clippingGainSldr.getValue());
+    }
+
+    else if (slider == &softCurve)
+    {
+        audioProcessor.setSoftCurve(softCurve.getValue());
+    }
+
+    else if (slider == &asymVariable)
+    {
+        audioProcessor.setAsymVariable(asymVariable.getValue());
+    }
+}
+
+void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxThatHasChanged)
+{
+    if (comboBoxThatHasChanged == &menu)
+    {
+        if (menu.getItemId(0))
+        {
+            audioProcessor.typeOfDistortion = 0;
+        }
+
+        else if (menu.getItemId(1))
+        {
+            audioProcessor.typeOfDistortion = 1;
+        }
+
+        else if (menu.getItemId(2))
+        {
+            audioProcessor.typeOfDistortion = 2;
+        }
+
+        else if (menu.getItemId(3))
+        {
+            audioProcessor.typeOfDistortion = 3;
+        }
+       
+        else if (menu.getItemId(4))
+        {
+            audioProcessor.typeOfDistortion = 4;
+        }
     }
 }

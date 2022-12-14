@@ -143,6 +143,70 @@ float TypesofDistortionAudioProcessor::hardClipping(float input)
         return input;
 }
 
+float TypesofDistortionAudioProcessor::softClipping(float input, int a)
+{
+    float output = 0;
+    if (input > 0)
+    {
+        output = (a / (a - 1)) * (1 - pow(a, -input));
+    }
+    else
+    {
+        output = (a / (a - 1)) * (-1 + pow(a, input));
+    }
+    return output;
+}
+
+float TypesofDistortionAudioProcessor::quarterCircle(float input)
+{
+    float output = 0;
+    if (input > 0)
+    {
+        output = sqrt(1 - pow((input - 1), 2));
+    }
+    else
+    {
+        output = (sqrt((1 - pow((input + 1), 2)))) * -1;
+    }
+    return output;
+}
+
+float TypesofDistortionAudioProcessor::asymmetrical(float input, float c)
+{
+    float a = 1 / (c + 1);
+    float output = 0;
+
+    if (input > 0)
+    {
+        output = input;
+    }
+    else
+    {
+        output = input + (pow(input * -1, a) / a);
+    }
+    return output;
+}
+
+//float TypesofDistortionAudioProcessor::hardClipProcessor(juce::AudioBuffer<float>& buffer)
+//{
+//    float fMix = 0;
+//    auto totalNumInputChannels = getTotalNumInputChannels();
+//    
+//    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+//    {
+//        auto* channelData = buffer.getWritePointer(channel);
+//
+//        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+//        {
+//            channelData[sample] = buffer.getSample(channel, sample);
+//            fMix = channelData[sample] * clippingGain;
+//            channelData[sample] = hardClipping(fMix);
+//            
+//            //channelData[sample] = hardClipping(channelData[sample] * clippingGain;);
+//        }
+//    }
+//}
+
 void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     float fMix = 0;
@@ -174,11 +238,70 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
   //
   //  auto leftBlock = block.getSingleChannelBlock(0);
   //  auto rightBlock = block.getSingleChannelBlock(1);
-        for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+      //  int hardClip = editor.menu.getItemId(1);
+      //  int softClip = editor.menu.getItemId(2);
+      //  int quarterCicle = editor.menu.getItemId(3);
+      //  int asymmetric = editor.menu.getItemId(4);
+
+        if (typeOfDistortion == 0)
         {
-            channelData[sample] = buffer.getSample(channel, sample);
-            channelData[sample] = hardClipping(channelData[sample] *= clippingGain);
-           // fMix = hardClipping(channelData[sample]);
+            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            {
+                channelData[sample] = buffer.getSample(channel, sample);
+                fMix = channelData[sample];
+                channelData[sample] = fMix;
+            }
+        }
+
+        if (typeOfDistortion == 1)
+        {
+            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            {
+                channelData[sample] = buffer.getSample(channel, sample);
+                fMix = channelData[sample] * clippingGain;
+                channelData[sample] = hardClipping(fMix);
+            }
+        }
+        
+        else if (typeOfDistortion == 2)
+        {
+            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            {
+                channelData[sample] = buffer.getSample(channel, sample);
+                fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
+
+                float hardClipped = hardClipping(fMix);
+           
+                channelData[sample] = softClipping(hardClipped, softCurveValue);
+            }
+        }
+
+        else if (typeOfDistortion == 3)
+        {
+            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            {
+                channelData[sample] = buffer.getSample(channel, sample);
+                fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
+
+                float hardClipped = hardClipping(fMix);
+                hardClipped *= 0.4;
+
+                channelData[sample] = quarterCircle(hardClipped);
+            }
+        }
+
+        else if (typeOfDistortion == 4)
+        {
+            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+            {
+                channelData[sample] = buffer.getSample(channel, sample);
+                fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
+
+                float hardClipped = hardClipping(fMix);
+                hardClipped *= 0.4;
+
+                channelData[sample] = asymmetrical(hardClipped, asymVariableValue);
+            }
         }
     }
 
@@ -213,6 +336,16 @@ void TypesofDistortionAudioProcessor::setStateInformation (const void* data, int
 void TypesofDistortionAudioProcessor::setClippingGain(float newClippingGain)
 {
     clippingGain = newClippingGain;
+}
+
+void TypesofDistortionAudioProcessor::setSoftCurve(float newSoftCurve)
+{
+    softCurveValue = newSoftCurve;
+}
+
+void TypesofDistortionAudioProcessor::setAsymVariable(float newAsymVariableValue)
+{
+    asymVariableValue = newAsymVariableValue;
 }
 
 //==============================================================================
