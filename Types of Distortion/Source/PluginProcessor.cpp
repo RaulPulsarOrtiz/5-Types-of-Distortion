@@ -231,14 +231,6 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         auto* channelData = buffer.getWritePointer (channel);
         
         // ..do something to the data...
-          //  juce::dsp::AudioBlock<float> block(buffer);
-  //
-  //  auto leftBlock = block.getSingleChannelBlock(0);
-  //  auto rightBlock = block.getSingleChannelBlock(1);
-      //  int hardClip = editor.menu.getItemId(1);
-      //  int softClip = editor.menu.getItemId(2);
-      //  int quarterCicle = editor.menu.getItemId(3);
-      //  int asymmetric = editor.menu.getItemId(4);
 
         if (typeOfDistortion == Off)
         {

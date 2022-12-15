@@ -36,5 +36,9 @@ private:
     Slider clippingGainSldr;
     Slider softCurve;
     Slider asymVariable;
+
+    juce::Rectangle<int> getWorkingArea();
+    juce::Rectangle<int> getAnalyserArea();
+    juce::Rectangle<int> getKnobsArea();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TypesofDistortionAudioProcessorEditor)
 };
