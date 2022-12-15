@@ -55,23 +55,25 @@ public:
 
     //==============================================================================
     void setClippingGain(float newClippingGain);
-    void setSoftCurve(double newSoftCurve);
-    void setAsymVariable(double newAsymVariableValue);
+    void setSoftCurve(float newSoftCurve);
+    void setAsymVariable(float newAsymVariableValue);
     //==============================================================================
     float hardClipping(float input);
     float softClipping(float input, int a);
     float quarterCircle(float input);
     float asymmetrical(float input, float c);
     
-   // enum typeOfDistortion
-   // {
-   //     hardClip,
-   //     softClip,
-   //     quarterCicle,
-   //     asymmetric
-   // };
-    int typeOfDistortion = 0;
+    enum TypeOfDistortion
+    {
+        Off,
+        HardClipType,
+        SoftClipType,
+        QuarterCicleType,
+        AsymmetricType
+    };
 
+    TypeOfDistortion typeOfDistortion;
+    void setDistortionType(TypeOfDistortion newType);
 private:
   
     float clippingGain;

@@ -34,16 +34,16 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
 
     softCurve.setSliderStyle(Slider::Rotary);
     //setTextBoxStyle()
-    softCurve.setRange(10.0, 10000.0);
-    softCurve.setValue(10.0);
+    softCurve.setRange(10.f, 10000.f);
+    softCurve.setValue(10.f);
     softCurve.addListener(this);
     addAndMakeVisible(softCurve);
 
     
     asymVariable.setSliderStyle(Slider::Rotary);
     //setTextBoxStyle()
-    asymVariable.setRange(0.0, 1.0);
-    asymVariable.setValue(1.0);
+    asymVariable.setRange(0.f, 1.f);
+    asymVariable.setValue(1.f);
     asymVariable.addListener(this);
     addAndMakeVisible(asymVariable);
 
@@ -93,29 +93,29 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
 {
     if (comboBoxThatHasChanged == &menu)
     {
-        if (menu.getSelectedId() == 1)
+        if (menu.getSelectedId() == 1) //Off
         {
-            audioProcessor.typeOfDistortion = 0;
+            audioProcessor.setDistortionType(audioProcessor.Off);
         }
 
-        else if (menu.getSelectedId() == 2)
+        else if (menu.getSelectedId() == 2) //HardClipping
         {
-            audioProcessor.typeOfDistortion = 1;
+            audioProcessor.setDistortionType(audioProcessor.HardClipType);
         }
 
         else if (menu.getSelectedId() == 3)
         {
-            audioProcessor.typeOfDistortion = 2;
+            audioProcessor.setDistortionType(audioProcessor.SoftClipType); //SoftClipping
         }
 
         else if (menu.getSelectedId() == 4)
         {
-            audioProcessor.typeOfDistortion = 3;
+            audioProcessor.setDistortionType(audioProcessor.QuarterCicleType) ; //QuarterCicle
         }
        
         else if (menu.getSelectedId() == 5)
         {
-            audioProcessor.typeOfDistortion = 4;
+            audioProcessor.setDistortionType(audioProcessor.AsymmetricType); //Asymmetrical
         }
     }
 }

@@ -199,6 +199,11 @@ float TypesofDistortionAudioProcessor::asymmetrical(float input, float c)
     return output;
 }
 
+void TypesofDistortionAudioProcessor::setDistortionType(TypeOfDistortion newType)
+{
+    typeOfDistortion = newType;
+}
+
 void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     float fMix = 0;
@@ -235,17 +240,17 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
       //  int quarterCicle = editor.menu.getItemId(3);
       //  int asymmetric = editor.menu.getItemId(4);
 
-        if (typeOfDistortion == 0)
+        if (typeOfDistortion == Off)
         {
-            for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
-            {
-                channelData[sample] = buffer.getSample(channel, sample);
-                fMix = channelData[sample];
-                channelData[sample] = fMix;
-            }
+           // for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
+           // {
+           //     channelData[sample] = buffer.getSample(channel, sample);
+           //     fMix = channelData[sample];
+           //     channelData[sample] = fMix;
+           // }
         }
 
-        if (typeOfDistortion == 1)
+        if (typeOfDistortion == HardClipType)
         {
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
@@ -255,7 +260,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             }
         }
         
-        else if (typeOfDistortion == 2)
+        else if (typeOfDistortion == SoftClipType)
         {
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
@@ -269,7 +274,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             }
         }
 
-        else if (typeOfDistortion == 3)
+        else if (typeOfDistortion == QuarterCicleType)
         {
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
@@ -283,7 +288,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             }
         }
 
-        else if (typeOfDistortion == 4)
+        else if (typeOfDistortion == AsymmetricType)
         {
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
@@ -331,12 +336,12 @@ void TypesofDistortionAudioProcessor::setClippingGain(float newClippingGain)
     clippingGain = newClippingGain;
 }
 
-void TypesofDistortionAudioProcessor::setSoftCurve(double newSoftCurve)
+void TypesofDistortionAudioProcessor::setSoftCurve(float newSoftCurve)
 {
     softCurveValue = newSoftCurve;
 }
 
-void TypesofDistortionAudioProcessor::setAsymVariable(double newAsymVariableValue)
+void TypesofDistortionAudioProcessor::setAsymVariable(float newAsymVariableValue)
 {
     asymVariableValue = newAsymVariableValue;
 }
