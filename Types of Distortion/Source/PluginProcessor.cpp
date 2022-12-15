@@ -239,6 +239,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
            //     channelData[sample] = buffer.getSample(channel, sample);
            //     fMix = channelData[sample];
            //     channelData[sample] = fMix;
+           // channelData[sample] *= outputGain;
            // }
         }
 
@@ -249,6 +250,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 channelData[sample] = buffer.getSample(channel, sample);
                 fMix = channelData[sample] * clippingGain;
                 channelData[sample] = hardClipping(fMix);
+                channelData[sample] *= outputGain;
             }
         }
         
@@ -262,7 +264,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 float hardClipped = hardClipping(fMix);
            
                 channelData[sample] = softClipping(hardClipped, softCurveValue);
-               // channelData[sample] = quarterCircle(hardClipped);
+                channelData[sample] *= outputGain;
             }
         }
 
@@ -277,6 +279,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 hardClipped *= 0.4;
 
                 channelData[sample] = quarterCircle(hardClipped);
+                channelData[sample] *= outputGain;
             }
         }
 
@@ -291,6 +294,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 hardClipped *= 0.4;
 
                 channelData[sample] = asymmetrical(hardClipped, asymVariableValue);
+                channelData[sample] *= outputGain;
             }
         }
     }
@@ -323,12 +327,12 @@ void TypesofDistortionAudioProcessor::setStateInformation (const void* data, int
 }
 
 //==============================================================================
-void TypesofDistortionAudioProcessor::setClippingGain(float newClippingGain)
+void TypesofDistortionAudioProcessor::setClippingGain(int newClippingGain)
 {
     clippingGain = newClippingGain;
 }
 
-void TypesofDistortionAudioProcessor::setSoftCurve(float newSoftCurve)
+void TypesofDistortionAudioProcessor::setSoftCurve(int newSoftCurve)
 {
     softCurveValue = newSoftCurve;
 }
@@ -338,6 +342,10 @@ void TypesofDistortionAudioProcessor::setAsymVariable(float newAsymVariableValue
     asymVariableValue = newAsymVariableValue;
 }
 
+void TypesofDistortionAudioProcessor::setOutputGain(float newOutputGain)
+{
+    outputGain = newOutputGain;
+}
 //==============================================================================
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

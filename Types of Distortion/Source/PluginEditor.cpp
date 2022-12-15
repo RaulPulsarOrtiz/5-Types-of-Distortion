@@ -15,7 +15,7 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(700, 400);
+    setSize(647, 400);
 
     menu.addItem("Off", 1);
     menu.addItem("Hard Clipping", 2);
@@ -30,22 +30,33 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
     //setTextBoxStyle()
     clippingGainSldr.setRange(1, 30, 1);
     clippingGainSldr.setValue(1);
+    clippingGainSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 40, 15);
     clippingGainSldr.addListener(this);
     addAndMakeVisible(clippingGainSldr);
     
-    softCurve.setSliderStyle(Slider::Rotary);
-    //setTextBoxStyle()
-    softCurve.setRange(10.f, 10000.f);
-    softCurve.setValue(10.f);
-    softCurve.addListener(this);
-    addAndMakeVisible(softCurve);
+    softCurveSldr.setSliderStyle(Slider::Rotary);
+    softCurveSldr.setRange(10, 10000);
+    softCurveSldr.setValue(10);
+    softCurveSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 60, 15);
+    softCurveSldr.addListener(this);
+    addAndMakeVisible(softCurveSldr);
+    softCurveSldr.setVisible(false);
         
-    asymVariable.setSliderStyle(Slider::Rotary);
-    //setTextBoxStyle()
-    asymVariable.setRange(0.f, 1.f);
-    asymVariable.setValue(1.f);
-    asymVariable.addListener(this);
-    addAndMakeVisible(asymVariable);
+    asymVariableSldr.setSliderStyle(Slider::Rotary);
+    asymVariableSldr.setRange(0.f, 1.f);
+    asymVariableSldr.setValue(1.f);
+    asymVariableSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 60, 15);
+    asymVariableSldr.addListener(this);
+    addAndMakeVisible(asymVariableSldr);
+    asymVariableSldr.setVisible(false);
+   
+    outputGainSldr.setSliderStyle(Slider::Rotary);
+    outputGainSldr.setRange(0.f, 2.5f);
+    outputGainSldr.setValue(1.f);
+    outputGainSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 60, 15);
+    //outputGainSldr.mouseDoubleClick(MouseEvent mouse);
+    outputGainSldr.addListener(this);
+    addAndMakeVisible(outputGainSldr);
 
 }
 
@@ -102,8 +113,9 @@ void TypesofDistortionAudioProcessorEditor::resized()
     menuArea = menuArea.removeFromTop(40);
  
     clippingGainSldr.setBounds(knobsArea.removeFromLeft(150));
-    softCurve.setBounds(knobsArea.removeFromLeft(150));
-    asymVariable.setBounds(knobsArea.removeFromLeft(150));
+    softCurveSldr.setBounds(knobsArea.removeFromLeft(150));
+    asymVariableSldr.setBounds(knobsArea.removeFromLeft(150));
+    outputGainSldr.setBounds(knobsArea.removeFromLeft(150));
     menu.setBounds(menuArea);
 }
 
@@ -114,14 +126,19 @@ void TypesofDistortionAudioProcessorEditor::sliderValueChanged(Slider* slider)
         audioProcessor.setClippingGain(clippingGainSldr.getValue());
     }
 
-    else if (slider == &softCurve)
+    else if (slider == &softCurveSldr)
     {
-        audioProcessor.setSoftCurve(softCurve.getValue());
+        audioProcessor.setSoftCurve(softCurveSldr.getValue());
     }
 
-    else if (slider == &asymVariable)
+    else if (slider == &asymVariableSldr)
     {
-        audioProcessor.setAsymVariable(asymVariable.getValue());
+        audioProcessor.setAsymVariable(asymVariableSldr.getValue());
+    }
+
+    else if (slider == &outputGainSldr)
+    {
+        audioProcessor.setOutputGain(outputGainSldr.getValue());
     }
 }
 
@@ -132,26 +149,44 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
         if (menu.getSelectedId() == 1) //Off
         {
             audioProcessor.setDistortionType(audioProcessor.Off);
+            softCurveSldr.setVisible(false);
+            asymVariableSldr.setVisible(false);
         }
 
         else if (menu.getSelectedId() == 2) //HardClipping
         {
             audioProcessor.setDistortionType(audioProcessor.HardClipType);
+            softCurveSldr.setVisible(false);
+            asymVariableSldr.setVisible(false);
         }
 
         else if (menu.getSelectedId() == 3) //SoftClipping
         {
             audioProcessor.setDistortionType(audioProcessor.SoftClipType); 
+            softCurveSldr.setVisible(true);
+            asymVariableSldr.setVisible(false);
         }
 
         else if (menu.getSelectedId() == 4) //QuarterCicle
         {
             audioProcessor.setDistortionType(audioProcessor.QuarterCicleType);
+            softCurveSldr.setVisible(false);
+            asymVariableSldr.setVisible(false);
         }
        
         else if (menu.getSelectedId() == 5) //Asymmetrical
         {
             audioProcessor.setDistortionType(audioProcessor.AsymmetricType);
+            asymVariableSldr.setVisible(true);
+            softCurveSldr.setVisible(false);
         }
     }
+}
+
+void TypesofDistortionAudioProcessorEditor::mouseDoubleClick(const MouseEvent& event) //Doesnt Work
+{
+    clippingGainSldr.setValue(1);
+    softCurveSldr.setValue(10);
+    asymVariableSldr.setValue(1.f);
+    outputGainSldr.setValue(1.f);
 }

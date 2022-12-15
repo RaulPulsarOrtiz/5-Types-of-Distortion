@@ -16,7 +16,8 @@
 */
 class TypesofDistortionAudioProcessorEditor  : public juce::AudioProcessorEditor,
                                                public Slider::Listener,
-                                               public ComboBox::Listener
+                                               public ComboBox::Listener,
+                                               public MouseListener
 {
 public:
     TypesofDistortionAudioProcessorEditor (TypesofDistortionAudioProcessor&);
@@ -27,15 +28,14 @@ public:
     void resized() override;
     void sliderValueChanged(Slider* slider) override;
     void comboBoxChanged(ComboBox* comboBoxThatHasChanged) override;
+    void mouseDoubleClick(const MouseEvent& event) override;
     ComboBox menu;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     TypesofDistortionAudioProcessor& audioProcessor;
     
-    Slider clippingGainSldr;
-    Slider softCurve;
-    Slider asymVariable;
+    Slider clippingGainSldr, softCurveSldr, asymVariableSldr, outputGainSldr;
 
     juce::Rectangle<int> getWorkingArea();
     juce::Rectangle<int> getAnalyserArea();

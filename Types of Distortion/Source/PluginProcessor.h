@@ -54,9 +54,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    void setClippingGain(float newClippingGain);
-    void setSoftCurve(float newSoftCurve);
+    void setClippingGain(int newClippingGain);
+    void setSoftCurve(int newSoftCurve);
     void setAsymVariable(float newAsymVariableValue);
+    void setOutputGain(float newOutputGain);
     //==============================================================================
     float hardClipping(float input);
     float softClipping(float input, int a);
@@ -76,9 +77,10 @@ public:
     void setDistortionType(TypeOfDistortion newType);
 private:
   
-    float clippingGain = 1;
-    float softCurveValue = 10.f;
+    int clippingGain = 1;
+    int softCurveValue = 10;
     float asymVariableValue = 1.f;
+    float outputGain = 1.f;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TypesofDistortionAudioProcessor)
