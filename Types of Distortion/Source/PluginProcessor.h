@@ -58,6 +58,7 @@ public:
     void setSoftCurve(int newSoftCurve);
     void setAsymVariable(float newAsymVariableValue);
     void setOutputGain(float newOutputGain);
+    void setFilterFreqCutoff(int newFreq);
     //==============================================================================
     float hardClipping(float input);
     float softClipping(float input, int a);
@@ -81,6 +82,20 @@ private:
     int softCurveValue = 10;
     float asymVariableValue = 1.f;
     float outputGain = 1.f;
+
+    //Other types of fliters, useful for other cases:
+    enum class FilterType
+    {
+        LowPass,
+        BandPass,
+        HighPass
+    };
+
+    FilterType filterType{ FilterType::HighPass };
+    void setFilterType();
+    int freqCutoff = 20;
+    void reset() override;
+    dsp::StateVariableTPTFilter<float> filter;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TypesofDistortionAudioProcessor)

@@ -95,6 +95,14 @@ void TypesofDistortionAudioProcessor::prepareToPlay (double sampleRate, int samp
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+    dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumInputChannels();
+
+    filter.prepare(spec);
+    reset();
 }
 
 void TypesofDistortionAudioProcessor::releaseResources()
@@ -156,17 +164,6 @@ float TypesofDistortionAudioProcessor::softClipping(float input, int a)
         output = (a / (a - 1)) * (-1 + pow(a, input));
     }
     return output;
-
-   // if (input > 0)
-   // {
-   //     output = 1 - pow(a, -input);
-   // }
-   // else
-   // {
-   //     output = -1 + pow(a, input);
-   // }
-   // output = output * a / (a - 1);
-   // return output;
 }
 
 float TypesofDistortionAudioProcessor::quarterCircle(float input)
@@ -210,7 +207,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-
+    filter.setCutoffFrequency(freqCutoff);
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -250,6 +247,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 channelData[sample] = buffer.getSample(channel, sample);
                 fMix = channelData[sample] * clippingGain;
                 channelData[sample] = hardClipping(fMix);
+                channelData[sample] = filter.processSample(channel, channelData[sample]);
                 channelData[sample] *= outputGain;
             }
         }
@@ -264,6 +262,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 float hardClipped = hardClipping(fMix);
            
                 channelData[sample] = softClipping(hardClipped, softCurveValue);
+                channelData[sample] = filter.processSample(channel, channelData[sample]);
                 channelData[sample] *= outputGain;
             }
         }
@@ -279,6 +278,7 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 hardClipped *= 0.4;
 
                 channelData[sample] = quarterCircle(hardClipped);
+                channelData[sample] = filter.processSample(channel, channelData[sample]);
                 channelData[sample] *= outputGain;
             }
         }
@@ -294,7 +294,9 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 hardClipped *= 0.4;
 
                 channelData[sample] = asymmetrical(hardClipped, asymVariableValue);
+                channelData[sample] = filter.processSample(channel, channelData[sample]);
                 channelData[sample] *= outputGain;
+                
             }
         }
     }
@@ -346,6 +348,41 @@ void TypesofDistortionAudioProcessor::setOutputGain(float newOutputGain)
 {
     outputGain = newOutputGain;
 }
+
+void TypesofDistortionAudioProcessor::setFilterFreqCutoff(int newFreq)
+{
+    freqCutoff = newFreq;
+}
+
+//==============================================================================
+void TypesofDistortionAudioProcessor::setFilterType()
+{
+    switch (filterType)
+    {
+    case FilterType::LowPass:
+        {
+        filter.setType(dsp::StateVariableTPTFilterType::lowpass);
+        break;
+        }
+    case FilterType::BandPass:
+        {
+        filter.setType(dsp::StateVariableTPTFilterType::bandpass);
+        break;
+        }
+    case FilterType::HighPass:
+        {
+        filter.setType(dsp::StateVariableTPTFilterType::highpass);
+        break;
+        }
+    }
+}
+
+//==============================================================================
+void TypesofDistortionAudioProcessor::reset()
+{
+    filter.reset();
+}
+
 //==============================================================================
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
