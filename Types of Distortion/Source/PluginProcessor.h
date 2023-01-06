@@ -59,6 +59,7 @@ public:
     void setAsymVariable(float newAsymVariableValue);
     void setOutputGain(float newOutputGain);
     void setFilterFreqCutoff(int newFreq);
+    void setDryWetAmount(int newAmount);
     //==============================================================================
     float hardClipping(float input);
     float softClipping(float input, int a);
@@ -82,6 +83,10 @@ private:
     int softCurveValue = 10;
     float asymVariableValue = 1.f;
     float outputGain = 1.f;
+    int wetAmount = 1;
+    int dryAmount = 0;
+    float fDry = 0.f;
+    float fWet = 0.f;
 
     //Other types of fliters, useful for other cases:
     enum class FilterType
@@ -91,9 +96,9 @@ private:
         HighPass
     };
 
-    FilterType filterType{ FilterType::HighPass };
+    FilterType filterType{ FilterType::LowPass };
     void setFilterType();
-    int freqCutoff = 20;
+    int freqCutoff = 20000;
     void reset() override;
     dsp::StateVariableTPTFilter<float> filter;
 

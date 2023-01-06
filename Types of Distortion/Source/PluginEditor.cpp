@@ -61,11 +61,21 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
     
     cutoffSldr.setSliderStyle(Slider::Rotary);
     cutoffSldr.setRange(20, 20000, 1);
-    cutoffSldr.setValue(20);
-    cutoffSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 40, 15);
+    cutoffSldr.setValue(20000);
+    cutoffSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 60, 15);
     //cutoffSldr.mouseDoubleClick(MouseEvent mouse);
+    cutoffSldr.setTextValueSuffix("Hz");
     cutoffSldr.addListener(this);
     addAndMakeVisible(cutoffSldr);
+
+    dryWetSldr.setSliderStyle(Slider::Rotary);
+    dryWetSldr.setRange(0, 100, 1);
+    dryWetSldr.setValue(100);
+    dryWetSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 40, 15);
+    //cutoffSldr.mouseDoubleClick(MouseEvent mouse);
+    dryWetSldr.setTextValueSuffix("%");
+    dryWetSldr.addListener(this);
+    addAndMakeVisible(dryWetSldr);
 }
 
 TypesofDistortionAudioProcessorEditor::~TypesofDistortionAudioProcessorEditor()
@@ -127,6 +137,7 @@ void TypesofDistortionAudioProcessorEditor::resized()
     menu.setBounds(menuArea);
     cutoffSldr.setBounds(analyserArea.removeFromRight(100));
     cutoffSldr.setSize(100, 100);
+    dryWetSldr.setBounds(analyserArea.removeFromTop(100));
 }
 
 void TypesofDistortionAudioProcessorEditor::sliderValueChanged(Slider* slider)
@@ -156,6 +167,10 @@ void TypesofDistortionAudioProcessorEditor::sliderValueChanged(Slider* slider)
         audioProcessor.setFilterFreqCutoff(cutoffSldr.getValue());
     }
     
+    else if (slider == &dryWetSldr)
+    {
+        audioProcessor.setDryWetAmount(dryWetSldr.getValue());
+    }
 }
 
 void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxThatHasChanged)

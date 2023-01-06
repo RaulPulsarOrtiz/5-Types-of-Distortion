@@ -245,10 +245,18 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
                 channelData[sample] = buffer.getSample(channel, sample);
+                fDry = channelData[sample];
+                
                 fMix = channelData[sample] * clippingGain;
-                channelData[sample] = hardClipping(fMix);
-                channelData[sample] = filter.processSample(channel, channelData[sample]);
+                float fClipped = hardClipping(fMix);
+               
+                
+                float fFiltered = filter.processSample(channel, fClipped);
+                fWet = fFiltered;
+                channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
+                
                 channelData[sample] *= outputGain;
+
             }
         }
         
@@ -257,12 +265,15 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
                 channelData[sample] = buffer.getSample(channel, sample);
+                fDry = channelData[sample];
                 fMix = channelData[sample] * (clippingGain * 0.17); //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
                 float hardClipped = hardClipping(fMix);
            
                 channelData[sample] = softClipping(hardClipped, softCurveValue);
-                channelData[sample] = filter.processSample(channel, channelData[sample]);
+                float fFiltered = filter.processSample(channel, channelData[sample]);
+                fWet = fFiltered;
+                channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
                 channelData[sample] *= outputGain;
             }
         }
@@ -272,13 +283,16 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
                 channelData[sample] = buffer.getSample(channel, sample);
+                fDry = channelData[sample];
                 fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
                 float hardClipped = hardClipping(fMix);
                 hardClipped *= 0.4;
 
                 channelData[sample] = quarterCircle(hardClipped);
-                channelData[sample] = filter.processSample(channel, channelData[sample]);
+                float fFiltered = filter.processSample(channel, channelData[sample]);
+                fWet = fFiltered;
+                channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
                 channelData[sample] *= outputGain;
             }
         }
@@ -288,13 +302,16 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
             {
                 channelData[sample] = buffer.getSample(channel, sample);
+                fDry = channelData[sample];
                 fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
                 float hardClipped = hardClipping(fMix);
                 hardClipped *= 0.4;
 
                 channelData[sample] = asymmetrical(hardClipped, asymVariableValue);
-                channelData[sample] = filter.processSample(channel, channelData[sample]);
+                float fFiltered = filter.processSample(channel, channelData[sample]);
+                fWet = fFiltered;
+                channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
                 channelData[sample] *= outputGain;
                 
             }
@@ -352,6 +369,12 @@ void TypesofDistortionAudioProcessor::setOutputGain(float newOutputGain)
 void TypesofDistortionAudioProcessor::setFilterFreqCutoff(int newFreq)
 {
     freqCutoff = newFreq;
+}
+
+void TypesofDistortionAudioProcessor::setDryWetAmount(int newAmount)
+{
+    wetAmount = newAmount;
+    dryAmount = 1 - newAmount;
 }
 
 //==============================================================================

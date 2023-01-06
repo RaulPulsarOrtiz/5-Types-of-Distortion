@@ -35,7 +35,7 @@ private:
     // access the processor object that created it.
     TypesofDistortionAudioProcessor& audioProcessor;
     
-    Slider clippingGainSldr, softCurveSldr, asymVariableSldr, outputGainSldr, cutoffSldr;
+    Slider clippingGainSldr, softCurveSldr, asymVariableSldr, outputGainSldr, cutoffSldr, dryWetSldr;
 
     juce::Rectangle<int> getWorkingArea();
     juce::Rectangle<int> getAnalyserArea();
