@@ -10,7 +10,10 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "HardClipGUI.h"
+#include "SoftClipGUI.h"
 
+#include "AsymmetricalGUI.h"
 //==============================================================================
 /**
 */
@@ -35,7 +38,12 @@ private:
     // access the processor object that created it.
     TypesofDistortionAudioProcessor& audioProcessor;
     
-    Slider clippingGainSldr, softCurveSldr, asymVariableSldr, outputGainSldr, cutoffSldr, dryWetSldr;
+    HardClipGUI hardClipGUI;
+    SoftClipGUI softClipGUI;
+    //QuarterCicle
+    AsymmetricalGUI asymmetricalGUI;
+
+    Slider outputGainSldr, cutoffSldr, dryWetSldr;
 
     juce::Rectangle<int> getWorkingArea();
     juce::Rectangle<int> getAnalyserArea();

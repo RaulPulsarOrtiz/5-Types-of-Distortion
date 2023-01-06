@@ -137,64 +137,64 @@ bool TypesofDistortionAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 }
 #endif
 
-float TypesofDistortionAudioProcessor::hardClipping(float input)
-{
-    float output = 0;
-    if (input > 1)
-    {
-        return 1.f;
-    }
-    else if (input < -1)
-    {
-        return -1.f;
-    }
-    else
-        return input;
-}
+//float TypesofDistortionAudioProcessor::hardClipping(float input)
+//{
+//    float output = 0;
+//    if (input > 1)
+//    {
+//        return 1.f;
+//    }
+//    else if (input < -1)
+//    {
+//        return -1.f;
+//    }
+//    else
+//        return input;
+//}
 
-float TypesofDistortionAudioProcessor::softClipping(float input, int a)
-{
-    float output = 0;
-    if (input > 0)
-    {
-        output = (a / (a - 1)) * (1 - pow(a, -input));
-    }
-    else
-    {
-        output = (a / (a - 1)) * (-1 + pow(a, input));
-    }
-    return output;
-}
+//float TypesofDistortionAudioProcessor::softClipping(float input, int a)
+//{
+//    float output = 0;
+//    if (input > 0)
+//    {
+//        output = (a / (a - 1)) * (1 - pow(a, -input));
+//    }
+//    else
+//    {
+//        output = (a / (a - 1)) * (-1 + pow(a, input));
+//    }
+//    return output;
+//}
 
-float TypesofDistortionAudioProcessor::quarterCircle(float input)
-{
-    float output = 0;
-    if (input > 0)
-    {
-        output = sqrt(1 - pow((input - 1), 2));
-    }
-    else
-    {
-        output = (sqrt((1 - pow((input + 1), 2)))) * -1;
-    }
-    return output;
-}
+//float TypesofDistortionAudioProcessor::quarterCircle(float input)
+//{
+//    float output = 0;
+//    if (input > 0)
+//    {
+//        output = sqrt(1 - pow((input - 1), 2));
+//    }
+//    else
+//    {
+//        output = (sqrt((1 - pow((input + 1), 2)))) * -1;
+//    }
+//    return output;
+//}
 
-float TypesofDistortionAudioProcessor::asymmetrical(float input, float c)
-{
-    float a = 1 / (c + 1);
-    float output = 0;
-
-    if (input > 0)
-    {
-        output = input;
-    }
-    else
-    {
-        output = input + (pow(input * -1, a) / a);
-    }
-    return output;
-}
+//float TypesofDistortionAudioProcessor::asymmetrical(float input, float c)
+//{
+//    float a = 1 / (c + 1);
+//    float output = 0;
+//
+//    if (input > 0)
+//    {
+//        output = input;
+//    }
+//    else
+//    {
+//        output = input + (pow(input * -1, a) / a);
+//    }
+//    return output;
+//}
 
 void TypesofDistortionAudioProcessor::setDistortionType(TypeOfDistortion newType)
 {
@@ -247,8 +247,8 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
                 channelData[sample] = buffer.getSample(channel, sample);
                 fDry = channelData[sample];
                 
-                fMix = channelData[sample] * clippingGain;
-                float fClipped = hardClipping(fMix);
+                fMix = channelData[sample] * hardClipProcessor.getClippingGain();
+                float fClipped = hardClipProcessor.hardClipping(fMix);
                
                 
                 float fFiltered = filter.processSample(channel, fClipped);
@@ -266,11 +266,11 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             {
                 channelData[sample] = buffer.getSample(channel, sample);
                 fDry = channelData[sample];
-                fMix = channelData[sample] * (clippingGain * 0.17); //Reduce the range of scale from 1 - 30 to 1 - 5.1
+                fMix = channelData[sample] * (hardClipProcessor.getClippingGain() * 0.17); //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
-                float hardClipped = hardClipping(fMix);
+                float hardClipped = hardClipProcessor.hardClipping(fMix);
            
-                channelData[sample] = softClipping(hardClipped, softCurveValue);
+                channelData[sample] = softClipProcessor.softClipping(hardClipped, softClipProcessor.getSoftCurve());
                 float fFiltered = filter.processSample(channel, channelData[sample]);
                 fWet = fFiltered;
                 channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
@@ -284,12 +284,12 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             {
                 channelData[sample] = buffer.getSample(channel, sample);
                 fDry = channelData[sample];
-                fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
+                fMix = channelData[sample] * hardClipProcessor.getClippingGain() * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
-                float hardClipped = hardClipping(fMix);
+                float hardClipped = hardClipProcessor.hardClipping(fMix);
                 hardClipped *= 0.4;
 
-                channelData[sample] = quarterCircle(hardClipped);
+                channelData[sample] = quarterCircleProcessor.quarterCircle(hardClipped);
                 float fFiltered = filter.processSample(channel, channelData[sample]);
                 fWet = fFiltered;
                 channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
@@ -303,12 +303,12 @@ void TypesofDistortionAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
             {
                 channelData[sample] = buffer.getSample(channel, sample);
                 fDry = channelData[sample];
-                fMix = channelData[sample] * clippingGain * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
+                fMix = channelData[sample] * hardClipProcessor.getClippingGain() * 0.17; //Reduce the range of scale from 1 - 30 to 1 - 5.1
 
-                float hardClipped = hardClipping(fMix);
+                float hardClipped = hardClipProcessor.hardClipping(fMix);
                 hardClipped *= 0.4;
 
-                channelData[sample] = asymmetrical(hardClipped, asymVariableValue);
+                channelData[sample] = asymmetricalProcessor.asymmetrical(hardClipped, asymmetricalProcessor.getAsymVariable());
                 float fFiltered = filter.processSample(channel, channelData[sample]);
                 fWet = fFiltered;
                 channelData[sample] = (fWet * wetAmount) + (fDry * dryAmount);
@@ -346,20 +346,20 @@ void TypesofDistortionAudioProcessor::setStateInformation (const void* data, int
 }
 
 //==============================================================================
-void TypesofDistortionAudioProcessor::setClippingGain(int newClippingGain)
-{
-    clippingGain = newClippingGain;
-}
+//void TypesofDistortionAudioProcessor::setClippingGain(int newClippingGain)
+//{
+//    clippingGain = newClippingGain;
+//}
 
-void TypesofDistortionAudioProcessor::setSoftCurve(int newSoftCurve)
-{
-    softCurveValue = newSoftCurve;
-}
+//void TypesofDistortionAudioProcessor::setSoftCurve(int newSoftCurve)
+//{
+//    softCurveValue = newSoftCurve;
+//}
 
-void TypesofDistortionAudioProcessor::setAsymVariable(float newAsymVariableValue)
-{
-    asymVariableValue = newAsymVariableValue;
-}
+//void TypesofDistortionAudioProcessor::setAsymVariable(float newAsymVariableValue)
+//{
+//    asymVariableValue = newAsymVariableValue;
+//}
 
 void TypesofDistortionAudioProcessor::setOutputGain(float newOutputGain)
 {
