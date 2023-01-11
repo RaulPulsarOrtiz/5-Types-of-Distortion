@@ -37,5 +37,5 @@ void SoftClipProcessor::setSoftCurve(int newSoftCurve)
 
 int SoftClipProcessor::getSoftCurve()
 {
-    return softCurveValue;
+    return softCurveValue.load();
 }

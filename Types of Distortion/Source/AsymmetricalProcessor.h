@@ -9,6 +9,7 @@
 */
 
 #pragma once
+#include <atomic>
 
 class AsymmetricalProcessor
 {
@@ -19,6 +20,7 @@ public:
     float asymmetrical(float input, float c);
     void setAsymVariable(float newAsymVariableValue);
     float getAsymVariable();
+
 private:
-    float asymVariableValue = 1.f;
+    std::atomic<float> asymVariableValue = 1.f;
 };

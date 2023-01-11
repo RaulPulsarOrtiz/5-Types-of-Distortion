@@ -34,5 +34,5 @@ void AsymmetricalProcessor::setAsymVariable(float newAsymVariableValue)
 
 float AsymmetricalProcessor::getAsymVariable()
 {
-    return asymVariableValue;
+    return asymVariableValue.load();
 }

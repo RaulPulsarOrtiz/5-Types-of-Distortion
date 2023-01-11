@@ -32,5 +32,5 @@ void HardClipProcessor::setClippingGain(int newClippingGain)
 
 int HardClipProcessor::getClippingGain()
 {
-    return clippingGain;
+    return clippingGain.load();
 }

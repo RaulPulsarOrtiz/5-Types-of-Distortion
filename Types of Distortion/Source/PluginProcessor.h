@@ -13,6 +13,7 @@
 #include "SoftClipProcessor.h"
 #include "QuarterCircleProcessor.h"
 #include "AsymmetricalProcessor.h"
+#include <atomic>
 
 //==============================================================================
 /**
@@ -58,17 +59,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-   // void setClippingGain(int newClippingGain);
-   // void setSoftCurve(int newSoftCurve);
-   // void setAsymVariable(float newAsymVariableValue);
     void setOutputGain(float newOutputGain);
     void setFilterFreqCutoff(int newFreq);
     void setDryWetAmount(int newAmount);
     //==============================================================================
-   // float hardClipping(float input);
-   // float softClipping(float input, int a);
-  //  float quarterCircle(float input);
-   // float asymmetrical(float input, float c);
 
      /** @return HardClipProcessor*/
     HardClipProcessor* getHardClip() { return &hardClipProcessor; }
@@ -93,13 +87,10 @@ public:
     TypeOfDistortion typeOfDistortion;
     void setDistortionType(TypeOfDistortion newType);
 private:
-  
-   // int clippingGain = 1;
-   // int softCurveValue = 10;
-    //float asymVariableValue = 1.f;
-    float outputGain = 1.f;
-    int wetAmount = 1;
-    int dryAmount = 0;
+
+    std::atomic<float> outputGain = 1.f;
+    std::atomic<int> wetAmount = 1;
+    std::atomic<int> dryAmount = 0;
     float fDry = 0.f;
     float fWet = 0.f;
 

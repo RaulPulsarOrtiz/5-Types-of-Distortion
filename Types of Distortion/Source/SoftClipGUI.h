@@ -23,11 +23,12 @@ public:
     void resized() override; 
 
     Slider softCurveSldr;
+    Label softCurveText;
 
     void setSoftClip(SoftClipProcessor*);
 private:
     SoftClipProcessor* softClipProcessPtr {nullptr};
-    
+        
     juce::Rectangle<int> getWorkingArea();
     juce::Rectangle<int> getAnalyserArea();
     juce::Rectangle<int> getKnobsArea();

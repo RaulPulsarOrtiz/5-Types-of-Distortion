@@ -11,6 +11,7 @@
 #pragma once
 //#include <JuceHeader.h>
 #include <cmath>
+#include <atomic>
 
 class SoftClipProcessor
 {
@@ -24,6 +25,6 @@ public:
     int getSoftCurve();
 
 private:
-    int softClippingGain = 1;
-    int softCurveValue = 10;
+    //std::atomic<int> softClippingGain = 1;
+    std::atomic<int> softCurveValue = 10;
 };

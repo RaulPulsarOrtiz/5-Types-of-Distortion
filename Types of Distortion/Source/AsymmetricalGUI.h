@@ -23,6 +23,7 @@ public:
     void resized() override;
    
     Slider asymVariableSldr;
+    Label asymVariableText;
 
     void setAsymmetrical(AsymmetricalProcessor*);
 private:

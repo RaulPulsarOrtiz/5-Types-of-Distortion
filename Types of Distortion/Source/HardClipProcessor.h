@@ -7,8 +7,8 @@
 
   ==============================================================================
 */
-
 #pragma once
+#include <atomic>
 
 class HardClipProcessor
 {
@@ -21,5 +21,5 @@ public:
 	int getClippingGain();
 	
 private:
-	int clippingGain = 1;
+	std::atomic<int> clippingGain = 1;
 };

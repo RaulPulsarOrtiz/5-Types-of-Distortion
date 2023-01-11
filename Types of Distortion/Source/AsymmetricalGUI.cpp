@@ -15,10 +15,15 @@ AsymmetricalGUI::AsymmetricalGUI()
     asymVariableSldr.setSliderStyle(Slider::Rotary);
     asymVariableSldr.setRange(0.f, 1.f);
     asymVariableSldr.setValue(1.f);
-    asymVariableSldr.setTextBoxStyle(Slider::TextBoxBelow, true, 60, 15);
+    asymVariableSldr.setTextBoxStyle(Slider::TextBoxAbove, true, 60, 15);
     asymVariableSldr.addListener(this);
     addAndMakeVisible(asymVariableSldr);
     asymVariableSldr.setVisible(false);
+
+    asymVariableText.setText("Asymmetric Value", dontSendNotification);
+    asymVariableText.setColour(Label::ColourIds::outlineColourId, Colours::wheat);
+    addAndMakeVisible(asymVariableText);
+    asymVariableText.setVisible(false);
 }
 
 void AsymmetricalGUI::sliderValueChanged(Slider* slider)
@@ -53,7 +58,7 @@ juce::Rectangle<int> AsymmetricalGUI::getAnalyserArea()
 
 juce::Rectangle<int> AsymmetricalGUI::getKnobsArea()
 {
-    auto knobsAreaHeight = 100;
+    auto knobsAreaHeight = 170;
     auto knobsArea = getWorkingArea().removeFromBottom(knobsAreaHeight);
 
     return knobsArea;
@@ -70,6 +75,13 @@ void AsymmetricalGUI::resized()
     menuArea = menuArea.removeFromTop(40);
 
     asymVariableSldr.setBounds(knobsArea.removeFromLeft(150));
+    asymVariableSldr.setSize(100, 100);
+
+    Rectangle <int> asymmetricSldrPos = asymVariableSldr.getBounds();
+    int posX = asymmetricSldrPos.getCentreX();
+    int posY = asymmetricSldrPos.getCentreY();
+
+    asymVariableText.setBounds((posX - 60), (posY + 50), 115, 15);
 }
 
 

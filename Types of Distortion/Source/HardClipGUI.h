@@ -23,10 +23,11 @@ public:
 
     void setHardClip(HardClipProcessor*);
 private:
-    HardClipProcessor* hardClipProcessPtr{ nullptr };
+    HardClipProcessor* hardClipProcessPtr { nullptr };
 
     Slider clippingGainSldr;
-
+    Label clipGainText, clipGainValuesText;
+    
     juce::Rectangle<int> getWorkingArea();
     juce::Rectangle<int> getAnalyserArea();
     juce::Rectangle<int> getKnobsArea();

@@ -44,6 +44,7 @@ private:
     AsymmetricalGUI asymmetricalGUI;
 
     Slider outputGainSldr, cutoffSldr, dryWetSldr;
+    Label outputGainText, cutoffText, dryWetText;
 
     juce::Rectangle<int> getWorkingArea();
     juce::Rectangle<int> getAnalyserArea();
