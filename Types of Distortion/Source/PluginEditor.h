@@ -32,7 +32,7 @@ public:
     void sliderValueChanged(Slider* slider) override;
     void comboBoxChanged(ComboBox* comboBoxThatHasChanged) override;
     void mouseDoubleClick(const MouseEvent& event) override;
-    ComboBox menu;
+    ComboBox distortionTypeMenu, filterTypeMenu;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

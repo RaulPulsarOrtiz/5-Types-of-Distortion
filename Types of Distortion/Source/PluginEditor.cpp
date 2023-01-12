@@ -22,14 +22,14 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
    //No GUI for QuarterCicle?
     asymmetricalGUI.setAsymmetrical(audioProcessor.getAsymmetrical());
 
-    menu.addItem("Off", 1);
-    menu.addItem("Hard Clipping", 2);
-    menu.addItem("Soft Clipping", 3);
-    menu.addItem("Quarter Circle", 4);
-    menu.addItem("Asymmetrical ", 5);
-    menu.setText("Distortion Type", dontSendNotification);
-    menu.addListener(this);
-    addAndMakeVisible(menu);
+    distortionTypeMenu.addItem("Off", 1);
+    distortionTypeMenu.addItem("Hard Clipping", 2);
+    distortionTypeMenu.addItem("Soft Clipping", 3);
+    distortionTypeMenu.addItem("Quarter Circle", 4);
+    distortionTypeMenu.addItem("Asymmetrical", 5);
+    distortionTypeMenu.setText("Distortion Type", dontSendNotification);
+    distortionTypeMenu.addListener(this);
+    addAndMakeVisible(distortionTypeMenu);
    
     addAndMakeVisible(hardClipGUI);
     addAndMakeVisible(softClipGUI);
@@ -67,6 +67,12 @@ TypesofDistortionAudioProcessorEditor::TypesofDistortionAudioProcessorEditor(Typ
     outputGainText.setColour(Label::ColourIds::outlineColourId, Colours::wheat);
     addAndMakeVisible(outputGainText);
     
+    filterTypeMenu.addItem("LPF", 1);
+    filterTypeMenu.addItem("HPF", 2);
+    filterTypeMenu.setText("Filter Type:", dontSendNotification);
+    filterTypeMenu.addListener(this);
+    addAndMakeVisible(filterTypeMenu);
+
     cutoffText.setText("Cutoff Freq", dontSendNotification);
     cutoffText.setColour(Label::ColourIds::outlineColourId, Colours::wheat);
     addAndMakeVisible(cutoffText);
@@ -139,8 +145,8 @@ void TypesofDistortionAudioProcessorEditor::resized()
     int outPosY = outputSldrPos.getCentreY();
     outputGainText.setBounds((outPosX - 40), (outPosY + 50), 80, 15);
 
-    menu.setBounds(menuArea);
-   
+    distortionTypeMenu.setBounds(menuArea);
+       
     cutoffSldr.setBounds(analyserArea.removeFromRight(100));
     cutoffSldr.setSize(100, 100);
     Rectangle <int> cutoffSldrPos = cutoffSldr.getBounds();
@@ -148,8 +154,11 @@ void TypesofDistortionAudioProcessorEditor::resized()
     int cutPosY = cutoffSldrPos.getCentreY();
     cutoffText.setBounds((cutPosX - 40), (cutPosY + 50), 80, 15);
 
+    filterTypeMenu.setBounds(analyserArea.removeFromRight(100));
+    filterTypeMenu.setSize(100, 40);
 
     dryWetSldr.setBounds(analyserArea.removeFromTop(100));
+   
     Rectangle <int> dryWetSldrPos = dryWetSldr.getBounds();
     int dryPosX = dryWetSldrPos.getCentreX();
     int dryPosY = dryWetSldrPos.getCentreY();
@@ -177,9 +186,9 @@ void TypesofDistortionAudioProcessorEditor::sliderValueChanged(Slider* slider)
 
 void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxThatHasChanged)
 {
-    if (comboBoxThatHasChanged == &menu)
+    if (comboBoxThatHasChanged == &distortionTypeMenu)
     {
-        if (menu.getSelectedId() == 1) //Off
+        if (distortionTypeMenu.getSelectedId() == 1) //Off
         {
             audioProcessor.setDistortionType(audioProcessor.Off);
             softClipGUI.softCurveSldr.setVisible(false);
@@ -188,7 +197,7 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
             asymmetricalGUI.asymVariableText.setVisible(false);
         }
 
-        else if (menu.getSelectedId() == 2) //HardClipping
+        else if (distortionTypeMenu.getSelectedId() == 2) //HardClipping
         {
             audioProcessor.setDistortionType(audioProcessor.HardClipType);
             softClipGUI.softCurveSldr.setVisible(false);
@@ -197,7 +206,7 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
             asymmetricalGUI.asymVariableText.setVisible(false);
         }
 
-        else if (menu.getSelectedId() == 3) //SoftClipping
+        else if (distortionTypeMenu.getSelectedId() == 3) //SoftClipping
         {
             audioProcessor.setDistortionType(audioProcessor.SoftClipType); 
             softClipGUI.softCurveSldr.setVisible(true);
@@ -206,7 +215,7 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
             asymmetricalGUI.asymVariableText.setVisible(false);
         }
 
-        else if (menu.getSelectedId() == 4) //QuarterCicle
+        else if (distortionTypeMenu.getSelectedId() == 4) //QuarterCicle
         {
             audioProcessor.setDistortionType(audioProcessor.QuarterCicleType);
             softClipGUI.softCurveSldr.setVisible(false);
@@ -215,13 +224,27 @@ void TypesofDistortionAudioProcessorEditor::comboBoxChanged(ComboBox* comboBoxTh
             asymmetricalGUI.asymVariableText.setVisible(false);
         }
        
-        else if (menu.getSelectedId() == 5) //Asymmetrical
+        else if (distortionTypeMenu.getSelectedId() == 5) //Asymmetrical
         {
             audioProcessor.setDistortionType(audioProcessor.AsymmetricType);
             asymmetricalGUI.asymVariableSldr.setVisible(true);
             asymmetricalGUI.asymVariableText.setVisible(true);
             softClipGUI.softCurveSldr.setVisible(false);
             softClipGUI.softCurveText.setVisible(false);
+        }
+    }
+    if (comboBoxThatHasChanged == &filterTypeMenu)
+    {
+        if (filterTypeMenu.getSelectedId() == 1) //LPF
+        {
+            audioProcessor.setFilterType(audioProcessor.LowPass);
+            cutoffSldr.setValue(20000);
+        }
+
+        else if (filterTypeMenu.getSelectedId() == 2) //HPF
+        {
+            audioProcessor.setFilterType(audioProcessor.HighPass);
+            cutoffSldr.setValue(20);
         }
     }
 }

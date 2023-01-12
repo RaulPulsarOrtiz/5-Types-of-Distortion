@@ -86,6 +86,16 @@ public:
 
     TypeOfDistortion typeOfDistortion;
     void setDistortionType(TypeOfDistortion newType);
+
+    //Other types of fliters, useful for other cases:
+    enum FilterType
+    {
+        LowPass,
+        HighPass
+    };
+
+    FilterType filterType; // { FilterType::LowPass };
+    void setFilterType (FilterType filterType);
 private:
 
     std::atomic<float> outputGain = 1.f;
@@ -94,17 +104,8 @@ private:
     float fDry = 0.f;
     float fWet = 0.f;
 
-    //Other types of fliters, useful for other cases:
-    enum class FilterType
-    {
-        LowPass,
-        BandPass,
-        HighPass
-    };
 
-    FilterType filterType{ FilterType::LowPass };
-    void setFilterType();
-    int freqCutoff = 20000;
+    std::atomic<int> freqCutoff = 20000;
     void reset() override;
     dsp::StateVariableTPTFilter<float> filter;
 

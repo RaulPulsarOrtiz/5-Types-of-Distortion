@@ -304,27 +304,39 @@ void TypesofDistortionAudioProcessor::setDryWetAmount(int newAmount)
 }
 
 //==============================================================================
-void TypesofDistortionAudioProcessor::setFilterType()
+void TypesofDistortionAudioProcessor::setFilterType(FilterType newFilterType)
 {
-    switch (filterType)
+    filterType = newFilterType;
+
+    if (filterType == LowPass)
     {
-    case FilterType::LowPass:
-        {
         filter.setType(dsp::StateVariableTPTFilterType::lowpass);
-        break;
-        }
-    case FilterType::BandPass:
-        {
-        filter.setType(dsp::StateVariableTPTFilterType::bandpass);
-        break;
-        }
-    case FilterType::HighPass:
-        {
+    }
+
+    else if (filterType == HighPass)
+    {
         filter.setType(dsp::StateVariableTPTFilterType::highpass);
-        break;
-        }
     }
 }
+   // switch (filterType)
+   // {
+   // case FilterType::LowPass:
+   //     {
+   //     filter.setType(dsp::StateVariableTPTFilterType::lowpass);
+   //     break;
+   //     }
+   // case FilterType::BandPass:
+   //     {
+   //     filter.setType(dsp::StateVariableTPTFilterType::bandpass);
+   //     break;
+   //     }
+   // case FilterType::HighPass:
+   //     {
+   //     filter.setType(dsp::StateVariableTPTFilterType::highpass);
+   //     break;
+   //     }
+   // }
+
 
 //==============================================================================
 void TypesofDistortionAudioProcessor::reset()
