@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "AsymmetricalProcessor.h"
+#include "GUIposition.h"
 
 class AsymmetricalGUI : public Component,
                         public Slider::Listener
@@ -27,9 +28,8 @@ public:
 
     void setAsymmetrical(AsymmetricalProcessor*);
 private:
+    /** Reference to the AsymmetricalProcessor class through a pointer to access and control AsymmetricalProcessor class member functions */
     AsymmetricalProcessor* asymmetricProcessPtr { nullptr };
 
-    juce::Rectangle<int> getWorkingArea();
-    juce::Rectangle<int> getAnalyserArea();
-    juce::Rectangle<int> getKnobsArea();
+    GUIposition guiPosition;
 };

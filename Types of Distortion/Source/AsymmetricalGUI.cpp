@@ -34,45 +34,12 @@ void AsymmetricalGUI::sliderValueChanged(Slider* slider)
     }
 }
 
-juce::Rectangle<int> AsymmetricalGUI::getWorkingArea()
-{
-    auto bounds = getLocalBounds();
-    //  bounds.reduce(15, //JUCE_LIVE_CONSTANT(5),
-    //                20); //JUCE_LIVE_CONSTANT(5));
-    bounds.removeFromTop(20);
-    bounds.removeFromBottom(20);
-    bounds.removeFromLeft(20);
-    bounds.removeFromRight(20);
-
-    return bounds;
-}
-
-juce::Rectangle<int> AsymmetricalGUI::getAnalyserArea()
-{
-    auto analyserAreaHeight = 300;
-    auto analyserAreaWidth = 300;
-    auto analyserArea = getWorkingArea().removeFromTop(analyserAreaHeight);
-    analyserArea = getWorkingArea().removeFromTop(analyserAreaWidth);
-    return analyserArea;
-}
-
-juce::Rectangle<int> AsymmetricalGUI::getKnobsArea()
-{
-    auto knobsAreaHeight = 170;
-    auto knobsArea = getWorkingArea().removeFromBottom(knobsAreaHeight);
-
-    return knobsArea;
-}
-
 void AsymmetricalGUI::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    auto area = getWorkingArea();
-    auto knobsArea = getKnobsArea();
-    auto analyserArea = getAnalyserArea();
-    auto menuArea = analyserArea.removeFromLeft(130);
-    menuArea = menuArea.removeFromTop(40);
+    auto area = guiPosition.getWorkingArea();
+    auto knobsArea = guiPosition.getKnobsArea();
 
     asymVariableSldr.setBounds(knobsArea.removeFromLeft(150));
     asymVariableSldr.setSize(100, 100);
@@ -83,7 +50,6 @@ void AsymmetricalGUI::resized()
 
     asymVariableText.setBounds((posX - 60), (posY + 50), 115, 15);
 }
-
 
 void AsymmetricalGUI::setAsymmetrical(AsymmetricalProcessor* asymmetricProcessptr)
 {

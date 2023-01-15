@@ -16,8 +16,14 @@ public:
 	HardClipProcessor() {};
 	~HardClipProcessor() {};
 
-	float hardClipping(float input); //Declaration of the HardClip distortion process
+	/** Declaration of the process for an HardClipping Distortion.*/
+	float hardClipping(float input); 
+
+	/**Sets the value to the clippingGain variable. This gain is needed in order to make the signal bigger and later clip it to the bounds. This value comes from Editor Slider */
 	void setClippingGain(int newClippingGain);
+
+	/**@return the clippingGain value. This variable is used in AudioProcessor for the HardClip Type Distortion.
+		This function is need to keep that variable private */
 	int getClippingGain();
 	
 private:

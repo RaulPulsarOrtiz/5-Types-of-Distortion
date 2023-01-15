@@ -12,8 +12,9 @@
 #include "PluginProcessor.h"
 #include "HardClipGUI.h"
 #include "SoftClipGUI.h"
-
+//QuarterCicle is empty at the moment
 #include "AsymmetricalGUI.h"
+
 //==============================================================================
 /**
 */
@@ -32,12 +33,15 @@ public:
     void sliderValueChanged(Slider* slider) override;
     void comboBoxChanged(ComboBox* comboBoxThatHasChanged) override;
     void mouseDoubleClick(const MouseEvent& event) override;
-    ComboBox distortionTypeMenu, filterTypeMenu;
+   
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     TypesofDistortionAudioProcessor& audioProcessor;
     
+    ComboBox distortionTypeMenu, filterTypeMenu;
+
+    /**Objects of the classes for each distortion type GUI: */
     HardClipGUI hardClipGUI;
     SoftClipGUI softClipGUI;
     //QuarterCicle

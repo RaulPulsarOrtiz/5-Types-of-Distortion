@@ -19,9 +19,14 @@ public:
     SoftClipProcessor() {};
     ~SoftClipProcessor() {};
 
-    float softClipping(float input, int a); //Declaration of the SoftClip distortion process
-    //void setSoftClippingGain(int newClippingGain); //Gain needs to apply the SoftClip distortion
+    /** Declaration of the process for an HardClipping Distortion.*/
+    float softClipping(float input, int a); 
+   
+    /**Sets the value to the softCurve variable. This value comes from Editor Slider */
     void setSoftCurve(int newSoftCurve); // Set the SoftClip distortion curve value wanted
+
+    /**@return the softCurve value. This variable is used in AudioProcessor for the softClip Type Distortion.
+        This function is need to keep that variable private */
     int getSoftCurve();
 
 private:

@@ -11,6 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include "SoftClipProcessor.h"
+#include "GUIposition.h"
 
 class SoftClipGUI : public Component,
                     public Slider::Listener
@@ -27,9 +28,8 @@ public:
 
     void setSoftClip(SoftClipProcessor*);
 private:
+    /** Reference to the SoftClipProcessor class through a pointer to access and control SoftClipProcessor class member functions */
     SoftClipProcessor* softClipProcessPtr {nullptr};
         
-    juce::Rectangle<int> getWorkingArea();
-    juce::Rectangle<int> getAnalyserArea();
-    juce::Rectangle<int> getKnobsArea();
-};
+    GUIposition guiPosition;
+ };

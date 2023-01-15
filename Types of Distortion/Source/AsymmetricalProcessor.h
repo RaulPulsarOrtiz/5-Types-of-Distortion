@@ -17,8 +17,14 @@ public:
     AsymmetricalProcessor() {};
     ~AsymmetricalProcessor() {};
 
+    /** Declaration of the process for an Asymmetrical Distortion.*/
     float asymmetrical(float input, float c);
+
+    /**Sets the value to the asymmetric variable. This value comes from Editor Slider */
     void setAsymVariable(float newAsymVariableValue);
+   
+    /**@return the value that shape the asymmetrical distortion. (asymVariableValue) This variable is used in AudioProcessor for the Asymmetrical Type Distortion.
+    This function is need to keep that variable private*/
     float getAsymVariable();
 
 private:
