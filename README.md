@@ -1,4 +1,4 @@
-# 5-Types-of-Distortion
+# 5-Types-of-Distortion Plug-in
 This project is a Plug-in that can apply 5 different types of distortion. These are: 'Hard Clip', 'Soft Clip', 'Quarter Cicle' and 'Asymmetric'.
 The project is written in C++ using JUCE framework. It has been created using OPP and is Thread safe.
 The interface has a menu to select which type of distortion has. It also has knobs to choose the value needed for each type of distortion, these knobs are just visible when that type of distortion is selected.
